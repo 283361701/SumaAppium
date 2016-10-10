@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Test"
+           tests="3"
+           failures="0"
+           errors="0"
+           skipped="0"
+           time="10.523">
+  <properties />
+  
+  
+            <testcase name="testActivity" time="6.238" classname="com.sumavision.debug.Testcase" />
+                <testcase name="testSettings" time="0.775" classname="com.sumavision.debug.Testcase" />
+                <testcase name="testDisplay" time="3.510" classname="com.sumavision.debug.Testcase" />
+      
+</testsuite>
