@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 断言
+ * 结果断言
  * @author chenxunlie
  * 20161009
  */
@@ -36,4 +36,5 @@ public class Assertion {
             flag = false;
         }
     }
+    
 }

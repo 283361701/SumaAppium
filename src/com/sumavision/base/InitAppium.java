@@ -19,13 +19,13 @@ import io.appium.java_client.android.AndroidElement;
 
 @Listeners({com.sumavision.base.AssertionListener.class}) 
 public class InitAppium {
-	public static String deviceName = "192.168.88.101:5555";
-	public static String platformVersion = "5.0.0";
+	public static String deviceName = "10.10.30.202:5555";
+	public static String platformVersion = "4.4.2";
 	public static String platformName = "Android";
 	//安装apk的存放路径
 	public static String appPath = System.getProperty("user.dir")+"/apps/xxx.apk";
 	public static String appPackage = "com.android.settings";
-	public static String appActivity = ".Settings";
+	public static String appActivity = "com.sumavision.ui.dialog.NoNumPasswordActivty";
 	public static String noReset = "True";
 	public static String noSign = "True";
 	public static String unicodeKeyboard = "True";

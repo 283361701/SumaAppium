@@ -5,12 +5,16 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.TimeoutException;
 
+//import android.graphics.Bitmap;
+//import android.graphics.BitmapFactory;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
 
 import static com.sumavision.base.InitAppium.appPackage;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
 
 public class PageAppium {
 	AndroidDriver driver;
@@ -28,10 +32,10 @@ public class PageAppium {
             System.out.println("输入空字符串");
         }
     }
-	
-	public void sleep(int s){
+	//等待时间
+	public void sleep(int ms){
 		try {
-			Thread.sleep(s);
+			Thread.sleep(ms);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -162,11 +166,32 @@ public class PageAppium {
 			if(driver != null){
 				return (AndroidElement) driver.findElement(by);
 			}else{
-				print("Driver is null");
+				print("未识别到设备！");
 			}
 		} catch (NoSuchElementException e) {
-			print("捕获的异常信息为："+e.getMessage());
+			e.getMessage();
 		}
 		return null;
 	}
+//  RGB识别方法引用
+	/*public boolean isComImage(int x,int y,int w,int h,String contrastPtah){
+		OperateAppium operateAppium = new OperateAppium(this.driver);
+		String resultPath = operateAppium.takeScreenShot(x, y, w, h);
+		return ComparePicture.isCompareImage(resultPath, contrastPtah);		
+	}*/
+	
+	public boolean isComImage(int x,int y,int w,int h,String contrastPath){
+		return isComImage(x, y, w, h, contrastPath, 1);
+	}
+	public boolean isComImage(int x,int y,int w,int h,String contrastPath,double threshold) {
+		OperateAppium operateAppium = new OperateAppium(this.driver);
+		String resultPath = operateAppium.takeScreenShot(x, y, w, h);
+		try {
+			return ComparePicture.isHummingComImage(resultPath, contrastPath, threshold);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	 
 }

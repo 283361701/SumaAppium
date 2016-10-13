@@ -23,8 +23,6 @@ public class AssertionListener extends TestListenerAdapter {
     }
     @Override
     public void onTestFailure(ITestResult tr) {
-    	takeScreenShot(tr);
-    	System.err.println("tag");
         this.handleAssertion(tr);
     }
     @Override
@@ -34,14 +32,6 @@ public class AssertionListener extends TestListenerAdapter {
     @Override
     public void onTestSuccess(ITestResult tr) {
         this.handleAssertion(tr);
-    }
-    
-    private void takeScreenShot(ITestResult tr) {
-        OperateAppium operateAppium = (OperateAppium) tr.getInstance();
-        AndroidDriver androidDriver = operateAppium.driver;
-        System.out.println(androidDriver.getTitle());
-        operateAppium.takeScreenShot();
-
     }
 
     private int index = 0;
@@ -73,6 +63,11 @@ public class AssertionListener extends TestListenerAdapter {
             Assertion.flag = true;
             Assertion.errors.clear();
             tr.setStatus(ITestResult.FAILURE);
+//            失败截图
+//            OperateAppium operateAppium = (OperateAppium) tr.getInstance();
+//            AndroidDriver androidDriver = operateAppium.driver;
+//            operateAppium.print(androidDriver.getTitle());
+//            operateAppium.takeScreenShot();
         }
     }
     private StackTraceElement[] getKeyStackTrace(ITestResult tr, StackTraceElement[] stackTraceElements){
