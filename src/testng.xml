@@ -8,9 +8,7 @@
           <classes>
             <class name="com.sumavision.debug.Testcase">
                 <methods>
-                    <include name="testSettings" />
-                    <include name="testDisplay" />
-                    <include name="testActivity" />
+                    <include name="startIPTV" />
                 </methods>
             </class>
         </classes>
