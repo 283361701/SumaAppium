@@ -1,5 +1,7 @@
 package com.sumavision.base;
 
+import static com.sumavision.base.InitAppium.appPackage;
+
 import org.apache.http.util.TextUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -10,17 +12,18 @@ import org.openqa.selenium.TimeoutException;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
 
-import static com.sumavision.base.InitAppium.appPackage;
-
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-
 public class PageAppium {
-	AndroidDriver driver;
-	private static int WAIT_TIME = 3;
 	
-	public PageAppium(AndroidDriver androidDriver){
+	AndroidDriver driver;
+	
+	private static int WAIT_TIME = 3;
+	public static String RESULT_PATH = System.getProperty("user.dir")+"\\Result";
+	public static String CONTRAST_PATH = System.getProperty("user.dir")+"\\Contrast";
+	
+	public PageAppium(AndroidDriver androidDriver) {
 		this.driver = androidDriver;
 		waitAuto(WAIT_TIME);
 	}
@@ -32,6 +35,7 @@ public class PageAppium {
             System.out.println("输入空字符串");
         }
     }
+	
 	//等待时间
 	public void sleep(int ms){
 		try {
@@ -54,14 +58,6 @@ public class PageAppium {
             return null;
         }
     }
-
-	public void waitAuto() {
-		waitAuto(WAIT_TIME);
-	}
-	
-	public void waitAuto(int time) {
-		driver.manage().timeouts().implicitlyWait(time, TimeUnit.SECONDS);
-	}
 	
     public AndroidElement waitAutoById(String id) {
         return waitAutoById(id, WAIT_TIME);
@@ -78,29 +74,47 @@ public class PageAppium {
     public AndroidElement waitAutoByName(String name, int time) {
         return waitAuto(By.name(name), time);
     }
+    
+    public AndroidElement waitAutoByXp(String xPath, int time) {
+    	return waitAuto(By.xpath(xPath), time);
+    }
+    
+    
+    public AndroidElement waitAutoByXp(String xPath) {
+        return waitAutoByXp(xPath, WAIT_TIME);
+    }
 
-	
-	public boolean isIdElementExist(String id){
-		return isIdElementExist(id,0);
-	}
-	
-	public boolean isIdElementExist(String id,int timeOut){
+    public void waitAuto() {
+    	waitAuto(WAIT_TIME);
+    }
+    
+    public void waitAuto(int time) {
+    	driver.manage().timeouts()
+    	.implicitlyWait(time, TimeUnit.SECONDS);
+    }
+    
+    public boolean isIdElementExist(String id) {
+    	return isIdElementExist(id,0);
+    }
+    
+	public boolean isIdElementExist(String id,int timeOut) {
 		return isIdElementExist(id, timeOut,false);
 	}
 	
-	public boolean isIdElementExist(String id,int timeOut,boolean isShow){
+	public boolean isIdElementExist(String id,int timeOut,boolean isShow) {
 		return isElementExist(By.id(appPackage + ":id/" +id),timeOut,isShow);
 	}
-	 public boolean isNameElementExist(String name) {
-	        return isNameElementExist(name, 0);
+	
+	public boolean isNameElementExist(String name) {
+		return isNameElementExist(name, 0);
 	}
 
 	public boolean isNameElementExist(String name, int timeOut) {
-	        return isNameElementExist(name, timeOut,false);
+		return isNameElementExist(name, timeOut,false);
 	}
 
 	public boolean isNameElementExist(String name, int timeOut, boolean isShow) {
-	        return isElementExist(By.name(name),timeOut, isShow);
+	    return isElementExist(By.name(name),timeOut, isShow);
 	}
 	
 	public boolean isClassNameElementExist(String className) {
@@ -114,14 +128,27 @@ public class PageAppium {
 	public boolean isClassNameElementExist(String className,int timeOut,boolean isShow) {
 		return isElementExist(By.className(className), timeOut, isShow);
 	}
+	
+	public boolean isXpathExist(String text) {
+        return isXpathExist(text,0);
+    }
 
-	private boolean isElementExist(By by,int timeOut,boolean isShow){
+    public boolean isXpathExist(String text,int timeOut) {
+        return isXpathExist(text,timeOut, false);
+    }
+
+    public boolean isXpathExist(String text,int timeOut,boolean isShow) {
+        ////android.widget.TextView[@text='"+text+"']
+        return isElementExist(By.xpath(text), timeOut,isShow);
+    }
+
+	private boolean isElementExist(By by,int timeOut,boolean isShow) {
 		try {
 			AndroidElement element = waitAuto(by,timeOut);
-			if(element == null){
+			if (element == null) {
 				return false;
-			}else{
-				if(isShow){
+			} else {
+				if (isShow) {
                     return element.isDisplayed();
                 }
 			}
@@ -137,15 +164,15 @@ public class PageAppium {
         return str.contains(text);
     }
 	
-	public AndroidElement findById(String id,String desc){
+	public AndroidElement findById(String id,String desc) {
 		return findElementBy(By.id(id),desc);
 	}
 	
-	public AndroidElement findById(String id){
+	public AndroidElement findById(String id) {
 		return findById(id,"");
 	}
 	
-	public AndroidElement findByName(String name,String desc){
+	public AndroidElement findByName(String name,String desc) {
 		return findElementBy(By.name(name), desc);
 	}
 	
@@ -153,19 +180,27 @@ public class PageAppium {
 		return findByName(name,"");
 	}
 	
-	public AndroidElement findByClassName(String className,String desc){
+	public AndroidElement findByClassName(String className,String desc) {
 		return findElementBy(By.className(className), desc);
 	}
 	
-	public AndroidElement findByClassName(String className){
+	public AndroidElement findByClassName(String className) {
 		return findByClassName(className,"");
 	}
 	
-	private AndroidElement findElementBy(By by,String str){
+	public AndroidElement findByXpath(String xpathName) {
+        return findByXpath(xpathName,"");
+    }
+	
+    public AndroidElement findByXpath(String xpathName,String desc) {
+        return findElementBy(By.xpath(xpathName),desc);
+    }
+    	
+	private AndroidElement findElementBy(By by,String str) {
 		try {
-			if(driver != null){
+			if (driver != null) {
 				return (AndroidElement) driver.findElement(by);
-			}else{
+			} else {
 				print("未识别到设备！");
 			}
 		} catch (NoSuchElementException e) {
@@ -180,12 +215,15 @@ public class PageAppium {
 		return ComparePicture.isCompareImage(resultPath, contrastPtah);		
 	}*/
 	
-	public boolean isComImage(int x,int y,int w,int h,String contrastPath){
+	
+	public boolean isComImage(int x, int y, int w, int h, String contrastPath) {
 		return isComImage(x, y, w, h, contrastPath, 1);
 	}
-	public boolean isComImage(int x,int y,int w,int h,String contrastPath,double threshold) {
+	
+	public boolean isComImage(int x, int y, int w, int h, String contrastPath, double threshold) {
 		OperateAppium operateAppium = new OperateAppium(this.driver);
 		String resultPath = operateAppium.takeScreenShot(x, y, w, h);
+		
 		try {
 			return ComparePicture.isHummingComImage(resultPath, contrastPath, threshold);
 		} catch (IOException e) {
@@ -193,5 +231,5 @@ public class PageAppium {
 			return false;
 		}
 	}
-	 
+			
 }

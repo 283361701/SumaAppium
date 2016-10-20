@@ -7,6 +7,7 @@ package com.sumavision.base;
  * */
 
 public class Builder {
+	
     String deviceName = InitAppium.deviceName;
     String platformVersion = InitAppium.platformVersion;
     String platformName = InitAppium.platformName;
@@ -18,7 +19,6 @@ public class Builder {
     String unicodeKeyboard = InitAppium.unicodeKeyboard;
     String resetKeyboard = InitAppium.resetKeyboard;
     String appActivity = InitAppium.appActivity;
-    
 
     public Builder setAppPath(String appPath) {
         this.appPath = path + appPath;
@@ -79,4 +79,5 @@ public class Builder {
     public InitAppium build() {
         return new InitAppium(this);
     }
+    
 }

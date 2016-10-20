@@ -1,5 +1,19 @@
 package com.sumavision.base;
 
+import static com.sumavision.base.InitAppium.appPackage;
+import static io.appium.java_client.android.AndroidKeyCode.KEYCODE_MOVE_END;
+import static io.appium.java_client.android.AndroidKeyCode.BACKSPACE;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.http.util.TextUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.TimeoutException;
+//import android.graphics.Bitmap;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.AndroidElement;
+
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -18,21 +32,7 @@ import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.http.util.TextUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.TimeoutException;
 
-import bsh.This;
-//import android.graphics.Bitmap;
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.AndroidElement;
-
-import static com.sumavision.base.InitAppium.appPackage;
-import static io.appium.java_client.android.AndroidKeyCode.KEYCODE_MOVE_END;
-import static io.appium.java_client.android.AndroidKeyCode.BACKSPACE;
 
 /**
  * 操作逻辑父类
@@ -40,6 +40,7 @@ import static io.appium.java_client.android.AndroidKeyCode.BACKSPACE;
  * */
 
 public class OperateAppium {
+	
 	AndroidDriver driver;
 		
 	public static int WAIT_TIME = 10;
@@ -53,7 +54,7 @@ public class OperateAppium {
 	
 	//文字输入
 	public <T> void print(T str){
-		if(!TextUtils.isEmpty(String.valueOf(str))){
+		if (!TextUtils.isEmpty(String.valueOf(str))){
 			System.out.println(str);
 		} else {
 			System.out.println("输入空字符串");
@@ -64,7 +65,7 @@ public class OperateAppium {
 	public void sleep(int ms){
 		try {
 			Thread.sleep(ms);
-		} catch (InterruptedException e) {
+		} catch (InterruptedException e) { 
 			e.printStackTrace();
 		}
 	}
@@ -73,9 +74,12 @@ public class OperateAppium {
 		try {
             return new AndroidDriverWait(driver, time)
                     .until(new ExpectedCondition<AndroidElement>() {
+                    	
                         @Override
                         public AndroidElement apply(AndroidDriver androidDriver) {
+                        	
                             return (AndroidElement) androidDriver.findElement(by);
+                            
                         }
                     });
         } catch (TimeoutException e) {
@@ -100,6 +104,14 @@ public class OperateAppium {
         return waitAuto(By.name(name), time);
     }
         
+    public AndroidElement waitAutoByXp(String xPath) {
+        return waitAutoByXp(xPath, WAIT_TIME);
+    }
+
+    public AndroidElement waitAutoByXp(String xPath, int time) {
+        return waitAuto(By.xpath(xPath), time);
+    }
+
 	public void waitAuto() {
 		waitAuto(WAIT_TIME);
 	}
@@ -109,30 +121,33 @@ public class OperateAppium {
 		driver.manage().timeouts()
 		.implicitlyWait(time, TimeUnit.SECONDS);
 	}
+	
 	//元素点击
 	public boolean clickView(AndroidElement ae){
 		return clickView(ae,"");
 	}
 	
 	public boolean clickView(AndroidElement ae,String str){
-		if(ae != null){
+		if (ae != null) {
 			ae.click();
 			return true;
-		}else{
+		} else {
 			print(str+"不存在");
 		}
 		return false;
 	}
+	
 	//获取当前apk的activity
 	public String getCurrActivity() {
 		String str = driver.currentActivity();
 		return str.substring(str.lastIndexOf(".") + 1);
 	}
+	
 	//文本输入	
 	public void input(AndroidElement ae,String str){
-		if(ae == null){
+		if (ae == null) {
 			print("输入框不存在，无法输入字符串！！");
-		}else{
+		} else {
 			ae.sendKeys(str);
 		}
 	}
@@ -156,26 +171,29 @@ public class OperateAppium {
 			sleep(time);
 		}
 	}
+	
 	//全屏截图
-	public String takeScreenShot() {       
-        return takeScreenShot(0,0,1,1,2,(TakesScreenshot) this.driver);        
+	public String takeScreenShot() {   
+        return takeScreenShot(0,0,1,1,2,(TakesScreenshot) this.driver); 
     }
+	
 	//裁剪
 	public String takeScreenShot(int x,int y,int w,int h) {
 		return takeScreenShot (x,y,w,h,1,(TakesScreenshot) this.driver);
 	}
 	
 	public String takeScreenShot(int x,int y,int w,int h,int tag,TakesScreenshot drivername) {
-		 
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 		Calendar cal = Calendar.getInstance();
 	    Date date = cal.getTime();
 	    String dateStr = sf.format(date);
 	    String path = this.getClass().getSimpleName() + "_" + dateStr + ".png";	 
 	    String currentPath = RESULT_PATH; 
-	        
+	    
 	    File scrFile = drivername.getScreenshotAs(OutputType.FILE);
+	    
 	    switch (tag) {
+	    
 		case 1:				
 			try {
 				Iterator iterator = ImageIO.getImageReadersByFormatName("PNG");
@@ -195,6 +213,7 @@ public class OperateAppium {
 				e.printStackTrace();
 			}
 			break;
+			
 		case 2:	
 			try {
 		        print("截屏保存路径:" + currentPath + path);
@@ -208,9 +227,10 @@ public class OperateAppium {
 	    }
 	    return currentPath + "\\" + path;
 	}
+	
 	 //坐标点击
-	 public void pressFocus(int[] x){
-		 try {
+	public void pressFocus(int[] x){
+		try {
 			driver.tap(1, x[0], x[1], 500);
 			print("点击坐标："+x[0]+" "+x[1]);
 		} catch (Exception e) {
@@ -218,14 +238,17 @@ public class OperateAppium {
             e.printStackTrace();		
             }
 	 }
-	 //清楚文本框
+	
+	 //清除文本框
 	 public void clearText(AndroidElement element) {
 	        String text = element.getText();
 	        clickView(element);
 	        driver.pressKeyCode(KEYCODE_MOVE_END);
+	        
 	        for (int i = 0; i < text.length(); i++) {
 	            driver.pressKeyCode(BACKSPACE);
 	        }
+	        
 	        print("清除完成！");
 	 } 
 	 
